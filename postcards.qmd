@@ -1,0 +1,15 @@
+---
+title: "Voting and Postcards"
+author: Sharav Joshi
+format: html
+#| message: false
+execute: 
+  echo: false
+---
+
+```{R}
+library(tidyverse)
+library(primer.data)
+
+
+```
