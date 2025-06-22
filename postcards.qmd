@@ -10,6 +10,8 @@ execute:
 ```{R}
 library(tidyverse)
 library(primer.data)
+library(tidymodels)
+library(broom)
 
 
 ```
@@ -42,7 +44,16 @@ x <- shaming |>
 
 
 ```
+\begin{equation}
+\log \left( \frac{P(\text{voted} = 1)}{1 - P(\text{voted} = 1)} \right) = \beta_0 + \beta_1 \cdot \text{sex} + \beta_2 \cdot \text{age} + \beta_3 \cdot \text{treatment} + \beta_4 \cdot \text{voter\_class} + \beta_5 \cdot (\text{treatment} \times \text{voter\_class})
+\end{equation}
+```{R}
+#| cache: true
+fit_vote <- logistic_reg(engine = "glm") |>
+  fit(voted ~ sex + age + treatment * voter_class, data = x) |>
+  tidy(conf.int = TRUE)
 
+```
 
 Voter participation is an essential measure of civic engagement, often influenced by personal characteristics such as age and sex.
 
