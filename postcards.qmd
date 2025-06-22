@@ -49,14 +49,47 @@ x <- shaming |>
 \end{equation}
 ```{R}
 #| cache: true
+
 fit_vote <- logistic_reg(engine = "glm") |>
-  fit(voted ~ sex + age + treatment * voter_class, data = x) |>
-  tidy(conf.int = TRUE)
+  fit(voted ~ sex + age + treatment * voter_class, data = x)
 
 ```
 
+
+```{R}
+#| cache: true
+library(gt)
+
+# Extract model results
+model_results <- tidy(fit_vote, conf.int = TRUE)
+
+# Create a nice-looking table
+model_results |> 
+  select(term, estimate, conf.low, conf.high) |> 
+  gt() |>
+  tab_header(
+    title = "Logistic Regression Results"
+  ) |>
+  cols_label(
+    term = "Variable",
+    estimate = "Estimate",
+    conf.low = "Lower 95% CI",
+    conf.high = "Upper 95% CI"
+  ) |>
+  fmt_number(
+    columns = c(estimate, conf.low, conf.high),
+    decimals = 3
+  ) |>
+  tab_options(
+    table.border.top.color = "gray",
+    table.border.bottom.color = "gray"
+  )
+
+```
 Voter participation is an essential measure of civic engagement, often influenced by personal characteristics such as age and sex.
 
 Using data collected from a field experiment in Michigan involving over 180,000 registered voters, we explore whether social pressure can increase voter turnout in a primary election.
 
 One potential weakness of our model is that it does not account for unobserved factors, such as individual motivation or social influences outside the treatment, that may also affect voter turnout.
+
+We model voter turnout, a binary outcome indicating whether an individual voted or not, as a logistic function of sex, age, treatment status, voter engagement class, and the interaction between treatment and voter engagement.
