@@ -13,3 +13,32 @@ library(primer.data)
 
 
 ```
+```{R}
+x <- shaming |> 
+  mutate(
+    across(c(primary_00, primary_02, primary_04, general_00, general_02, general_04),
+           ~ ifelse(. == "Yes", 1, 0))
+  ) |>
+  mutate(
+    civ_engage = primary_00 + primary_02 + primary_04 +
+                 general_00 + general_02 + general_04
+  ) |> 
+  select(primary_06, treatment, sex, age, civ_engage) |>
+  mutate(
+    voter_class = case_when(
+      civ_engage %in% c(5, 6) ~ "Always Vote",
+      civ_engage %in% c(3, 4) ~ "Sometimes Vote",
+      civ_engage %in% c(1, 2) ~ "Rarely Vote",
+      TRUE ~ NA_character_
+    ),
+    voter_class = factor(
+      voter_class,
+      levels = c("Rarely Vote", "Sometimes Vote", "Always Vote"),
+      ordered = TRUE
+    ),
+    voted = as.factor(primary_06)
+  )
+
+
+
+```
