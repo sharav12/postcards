@@ -86,10 +86,55 @@ model_results |>
   )
 
 ```
+
+```{R}
+#| cache: true
+library(tidyverse)
+library(tidymodels)
+library(ggplot2)
+library(marginaleffects)
+
+# Create the predictions plot
+plot <- plot_predictions(fit_vote,
+                         type = "prob", 
+                         by = c("treatment", "group", "voter_class")) +
+  
+  # Title and subtitle
+  ggtitle("Effect of Treatment and Voter Engagement on Predicted Voting Probability",
+          subtitle = "Messages that involve social pressure, like the Neighbors treatment, most effectively increase voter turnout") +
+  
+  # Axis labels
+  labs(
+    x = "Treatment Type",
+    y = "Predicted Probability of Voting",
+    caption = "Data Source: Gerber, Green, and Larimer (2008) Field Experiment on Voter Turnout"
+  ) +
+  
+  # Make it pretty
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12, margin = margin(b = 10)),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 5),
+    plot.caption = element_text(size = 10, face = "italic", hjust = 0)
+  ) +
+  
+  # Optional: add color palette for clarity
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1")
+
+plot
+
+```
+
 Voter participation is an essential measure of civic engagement, often influenced by personal characteristics such as age and sex.
+
 
 Using data collected from a field experiment in Michigan involving over 180,000 registered voters, we explore whether social pressure can increase voter turnout in a primary election.
 
 One potential weakness of our model is that it does not account for unobserved factors, such as individual motivation or social influences outside the treatment, that may also affect voter turnout.
 
 We model voter turnout, a binary outcome indicating whether an individual voted or not, as a logistic function of sex, age, treatment status, voter engagement class, and the interaction between treatment and voter engagement.
+
+For example, the Neighbors treatment is associated with an estimated increase in the probability of voting of approximately 36 percentage points, with a 95% confidence interval ranging from about 28% to 44%
